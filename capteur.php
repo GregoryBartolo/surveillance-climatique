@@ -13,9 +13,8 @@
   </head>
  
   <body>
+	<?php include('navbar.php') ?>
     <div class="container-fluid">
-
-		<?php include('navbar.php') ?>
 		
 		<h2>Informations capteur</h2>
 		<div class="row">

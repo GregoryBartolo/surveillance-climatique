@@ -17,18 +17,47 @@
 #$id_capteur = $result['id_capteur'];
 #$infos_capteur = "<div>Température : ".$result['temperature']."°C</div><div>Humidité : ".$result['humidity']."%</div><div>Batterie restante : ".$result['battery']."%</div><div>Date : ".$result['date']."</div>";
 
-$query = "SELECT DISTINCT id_capteur from capteurs";
+$query = "SELECT DISTINCT id_capteur, position_x, position_y from capteurs";
 $results = $dbh->query($query)->fetchAll();
 
 $capteurs = array();
 foreach ($results as $id_capteur) {
-	$query = "SELECT MAX(mesures.id), * FROM mesures INNER JOIN capteurs WHERE mesures.id_capteur = ".$id_capteur['id_capteur'];
-	$datas = $dbh->query($query)->fetchAll();
+	$query = "SELECT MAX(mesures.id), * FROM mesures INNER JOIN capteurs WHERE mesures.id_capteur = ".$id_capteur['id_capteur']. " AND capteurs.id_capteur = ".$id_capteur['id_capteur'];
+	$datas = $dbh->query($query)->fetchAll()[0];
 	
-	$capteur = array();
-	foreach ($datas as $value) {
-		array_push($capteur, $value);
+	if (empty($datas['id'])) {
+		$id_capteur['content'] = "Pas de mesure.";
+		$id_capteur['depassement'] = "primary";
+		array_push($capteurs, $id_capteur);
 	}
-	
-	array_push($capteurs, $capteur);
+	else {
+		$battery = $datas['battery']." %";
+		if ($datas['battery'] < 15) {
+			$battery = "<span class='erreurValeur'>".$datas['battery']."%</span>"; 
+		}
+
+		$temperature = $datas['temperature']."°C";
+		if ($datas['temperature'] > $datas['limit_maxi_temperature'] or $datas['temperature'] < $datas['limit_mini_temperature']) {
+			$temperature = "<span class='erreurValeur'>".$datas['temperature']."°C</span>"; 
+		}
+		
+		$humidity = $datas['humidity']."%";
+		if ($datas['humidity'] > $datas['limit_maxi_humidity'] or $datas['humidity'] < $datas['limit_mini_humidity'] ) {
+			$humidity = "<span class='erreurValeur'>".$datas['humidity']."%</span>"; 
+		}
+		
+		$content = "Date : ".$datas['date'] ."<br> Temperature : ".$temperature." <br> Humidite : " .$humidity ." <br> Batterie : " .$battery;
+		$datas['content'] = $content;
+		
+		if ($datas['temperature'] > $datas['limit_maxi_temperature'] or $datas['temperature'] < $datas['limit_mini_temperature'] or $datas['humidity'] > $datas['limit_maxi_humidity'] or $datas['humidity'] < $datas['limit_mini_humidity'] or $datas['battery'] < 15)
+		{
+			$datas['depassement'] = "danger";
+		}
+		else
+		{
+			$datas['depassement'] = "primary";
+		}
+			
+		array_push($capteurs, $datas);
+	}
 }

@@ -1,3 +1,8 @@
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
 .popover {
 	max-width: 100%;
 }
@@ -41,4 +46,12 @@
 
 .no-border-right {
 	border-right: 0.2em dashed transparent;
+}
+
+.erreurValeur {
+	color: red;
+}
+
+.btn:disabled {
+	opacity: 0.90;
 }

@@ -8,10 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				
 			  $dbh->exec($query);
 			  
-			  } catch(Exception $e) {   
-    echo $e->getMessage();
-}
-
+		} catch(Exception $e) {   
+			echo $e->getMessage();
+		}
 	}
 }
 
