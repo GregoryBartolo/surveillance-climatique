@@ -1,3 +1,44 @@
 .popover {
 	max-width: 100%;
 }
+
+.entete-table {
+	width: 100%;
+}
+
+.entete-td {
+	text-align: center;
+	border: 0.2em solid transparent;
+}
+
+.side-table {
+	position: relative;
+	float: right;
+	height: 100%;
+}
+
+.grille-table {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.grille-td {
+	border: 0.2em dashed black;
+}
+
+.no-border-top {
+	border-top: 0.2em dashed transparent;
+}
+
+.no-border-bottom {
+	border-bottom: 0.2em dashed transparent;
+}
+
+.no-border-left {
+	border-left: 0.2em dashed transparent;
+}
+
+.no-border-right {
+	border-right: 0.2em dashed transparent;
+}
