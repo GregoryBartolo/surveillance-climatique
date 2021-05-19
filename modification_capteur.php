@@ -13,10 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				  limit_maxi_humidity = '".$_POST['seuilMaxiHumidite']."',
 				  position_x = '".$_POST['positionX']."',
 				  position_y = '".$_POST['positionY']."'
-				WHERE id = ".$_GET['id_capteur'];
+				WHERE id_capteur = ".$_GET['id_capteur'];
 			
 			  $dbh->exec($query);
-			  
 		}
 		catch(Exception $e) {   
 			echo $e->getMessage();
@@ -35,4 +34,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 }
-
