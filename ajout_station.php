@@ -17,9 +17,9 @@
     <?php include('data_ajout_station.php') ?>
     <div class="container-fluid">
 	
-	<h2>Ajout d'un capteur</h2>
+	<h2 class="mt-3">Ajout d'un capteur</h2>
 	<div class="row">
-	    <div class="col-6">
+	    <div class="col-3">
 		<form method="POST">
 		  <div class="mb-3">
 		      <div class="row"> 
@@ -85,7 +85,7 @@
 		  <button type="submit" name="submit" class="btn btn-primary" value="creation">Ajouter</button>  
 		</form>
 	    </div>
-	    <div class="col-6">
+	    <div class="col">
 		<div class="mt-3 row">
 		    <div class="col-3">
 		    </div>
@@ -118,7 +118,7 @@
 			  foreach ($capteurs as $capteur) { ?>
 			    <div class="position-absolute" style="top: <?php echo (int) $capteur['position_y'] ?>%; left: <?php echo (int) $capteur['position_x'] ?>%;">
 			      <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-html="true">
-				<button class="btn btn-primary" type="button" disabled><?php echo $capteur['id_capteur'] ?></button>
+				<button class="btn btn-success" type="button" disabled><?php echo $capteur['id_capteur'] ?></button>
 			      </span>
 			    </div>
 			  <?php }

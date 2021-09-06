@@ -55,7 +55,7 @@ foreach ($results as $id_capteur) {
 		}
 		else
 		{
-			$datas['depassement'] = "primary";
+			$datas['depassement'] = "success";
 		}
 			
 		array_push($capteurs, $datas);

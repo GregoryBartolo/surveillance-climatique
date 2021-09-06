@@ -16,19 +16,17 @@
 	<?php include('navbar.php') ?>
     <div class="container-fluid">
 		
-		<h2>Informations capteur</h2>
-		<div class="row">
-			<p class="col-2">Date : <?php echo $date; ?></p>
-			<p class="col-2">Humidité : <?php echo $humidity; ?>%</p>
-		</div>
-		<div class="row">
-			<p class="col-2">Température : <?php echo $temperature; ?>°C</p>
-			<p class="col-2">Batterie : <?php echo $battery; ?>%</p>
-		</div>
-		
 		<div class="row">
 			<div class="col-8">
-				<canvas id="myChart"></canvas>
+				<h2>Informations capteur</h2>
+				<div class="row">
+					<p class="col-3">Date : <?php echo $date; ?></p>
+					<p class="col-2">Humidité : <?php echo $humidity; ?>%</p>
+				</div>
+				<div class="row">
+					<p class="col-3">Température : <?php echo $temperature; ?>°C</p>
+					<p class="col-2">Batterie : <?php echo $battery; ?>%</p>
+				</div>
 			</div>
 			<div class="col align-self-center">
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalModification">
@@ -38,6 +36,11 @@
 				  Supprimer la station
 				</button>
 			</div>
+		</div>
+		
+		<div class="row">
+			<!--<div id="chartContainer" style="height: 370px; width:80%;">-->
+			<canvas id="myChart" width="200" height="64"></canvas>
 		</div>
 		
 		<br>
@@ -152,9 +155,13 @@
 </html>
 
 <script src="js/popper.min.js"></script>
-<script src="js/chart.min.js"></script>
+<script src="js/canvasjs.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.min.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/chart.min.js"></script>
+<script src="js/chartjs-plugin-zoom.min.js"></script>
 <script type="text/Javascript">
   var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
   var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
@@ -170,32 +177,121 @@
     });
   })
 	
-	const labels = <?php echo json_encode($dates); ?>;
-	const data = {
-	  labels: labels,
-	  datasets: [{
-		label: 'Température',
-		borderColor: 'red',
-		data: <?php echo json_encode($temperatures); ?>,
-	  },
-	  {
-		label: 'Humidité',
-		borderColor: 'green',
-		data: <?php echo json_encode($humidities); ?>,
-	  },
-	  {
-		label: 'Batterie',
-		borderColor: 'blue',
-		data: <?php echo json_encode($batteries); ?>,
-	  }]
-	};
-	const config = {
-	  type: 'line',
-	  data,
-	  options: {}
-	};
-	var myChart = new Chart(
-		document.getElementById('myChart'),
-		config
-	);
+	window.onload = function () {
+		/*
+		var chart = new CanvasJS.Chart("chartContainer", {
+			animationEnabled: true,
+			zoomEnabled: true,
+			title:{
+				text: "Les mesures" 
+			},
+			data: data 
+		});
+		chart.render();
+		*/
+		
+		var ctx = document.getElementById('myChart').getContext('2d');
+		
+		var dates = <?php echo json_encode($dates); ?>;
+		var temperatures = <?php echo json_encode($temperatures); ?>;
+		var humidities = <?php echo json_encode($humidities); ?>;
+		var batteries = <?php echo json_encode($batteries); ?>;
+		
+		const zoomOptions = {
+		  pan: {
+			enabled: true,
+			mode: 'xy',
+		  },
+		  zoom: {
+			wheel: {
+			  enabled: true,
+			},
+			pinch: {
+			  enabled: true
+			},
+			mode: 'xy',
+		  }
+		};
+		
+		
+		const config = {
+		  type: 'line',
+		  data: {
+			labels: dates,
+			datasets: [{
+			  label: 'Température',
+			  data: temperatures,
+			  fill: false,
+			  borderColor: 'red',
+			  tension: 0.1
+			},
+			{
+			  label: 'Humidité',
+			  data: humidities,
+			  fill: false,
+			  borderColor: 'blue',
+			  tension: 0.1
+			},
+			{
+			  label: 'Batterie',
+			  data: batteries,
+			  fill: false,
+			  borderColor: 'green',
+			  tension: 0.1
+			}]
+		  },
+		  options: {
+			plugins: {
+			  zoom: zoomOptions,
+			}
+		  }
+		};
+		
+		var myChart = new Chart(ctx, config);
+	
+	}
+
+	/*
+	var y = 0; var x = 0;
+	var data = [];
+	var dates = <?php echo json_encode($dates); ?>;
+	var temperatures = <?php echo json_encode($temperatures); ?>;
+	var humidities = <?php echo json_encode($humidities); ?>;
+	var batteries = <?php echo json_encode($batteries); ?>;
+	var dataSeriesTemperature = { type: "spline", name: "Température", showInLegend: true };
+	var dataSeriesHumidity = { type: "spline", name: "Humidité", showInLegend: true };
+	var dataSeriesBattery = { type: "spline", name: "Batterie", showInLegend: true };
+	var dataPointsTemperatures = [];
+	var dataPointsHumidities = [];
+	var dataPointsBatteries = [];
+	
+	for (var i = 0; i < <?php echo count($temperatures); ?>; i += 1) {
+		dataPointsTemperatures.push({
+			x: new Date(moment(dates[i], "DD/MM/YYYY HH:mm:ss")),
+			y: parseFloat(temperatures[i])
+		});
+	}
+	
+	for (var i = 0; i < <?php echo count($humidities); ?>; i += 1) {
+		dataPointsHumidities.push({
+			x: new Date(moment(dates[i], "DD/MM/YYYY HH:mm:ss")),
+			y: parseFloat(humidities[i])
+		});
+	}
+	
+	for (var i = 0; i < <?php echo count($batteries); ?>; i += 1) {
+		dataPointsBatteries.push({
+			x: new Date(moment(dates[i], "DD/MM/YYYY HH:mm:ss")),
+			y: parseFloat(batteries[i])
+		});
+	}
+	dataSeriesTemperature.dataPoints = dataPointsTemperatures;
+	dataSeriesHumidity.dataPoints = dataPointsHumidities;
+	dataSeriesBattery.dataPoints = dataPointsBatteries;
+	
+	data.push(dataSeriesTemperature);
+	data.push(dataSeriesHumidity);
+	data.push(dataSeriesBattery);
+	*/
+	
 </script>
