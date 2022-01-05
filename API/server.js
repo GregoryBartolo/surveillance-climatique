@@ -101,7 +101,7 @@ function requestArduino() {
 		db.close();
 	})
 }
-setInterval(requestArduino, 5000); //time in ms..
+setInterval(requestArduino, 300000); //time in ms..
 
 httpServer.listen(8888)
 
