@@ -74,7 +74,7 @@ void loop() {
           file.print("FLUSH");
           while(Ethernet.linkStatus() == LinkOFF)
           {
-            if ((millis()-t)>10000)
+            if ((millis()-t)>900000)
             {
                 hih.read();
                 float temp = hih.getAmbientTemp() / 100.0;
@@ -156,7 +156,7 @@ void loop() {
               client.print(",");
               client.print(hum); // humidité mesurée
               client.print(",");
-              client.print("20"); // pourcentage de la batterie
+              client.print("30"); // pourcentage de la batterie
               client.print(",");
               client.print("010101"); // statut du capteur
               client.print(",");
