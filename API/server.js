@@ -3,7 +3,7 @@ var http = require('http');
 var request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const dateformat = require('dateformat');
-const TIME_REQUEST = 10;
+const TIME_REQUEST = 900;
 
 var httpServer = http.createServer(function (req, resp) {
 	resp.writeHead(200, {'Access-Control-Allow-Origin':'*','Content-Type': 'text/plain'});
@@ -37,7 +37,6 @@ function requestArduino() {
 			console.log("------------");
 			
 			
-			
 			db.get('SELECT date FROM mesures WHERE id_capteur = ? AND id = (SELECT MAX(id) FROM mesures)', [id], (err, result) => {
 				if (err) {
 					return console.error(err.message);
@@ -45,16 +44,11 @@ function requestArduino() {
 				// Formattage
 				var dateTemp = result.date.split('/');
 				dateTemp = dateTemp[2].substring(0,4) + '-' + dateTemp[1] + '-' + dateTemp[0] + 'T' + result.date.split(' ')[1] 
-				console.log(dateTemp);
 				var date = new Date(dateTemp);
-				console.log(date);
 				
 				old_data.forEach(function(item) {
 					item = item.split("-");
 					date.setSeconds(date.getSeconds() + TIME_REQUEST)
-					console.log(item);
-					console.log("ICI");
-					console.log(date);
 					
 					var date_for_bdd = String(dateformat(date, 'dd/mm/yyyy HH:MM:ss'));
 					console.log(date_for_bdd);
