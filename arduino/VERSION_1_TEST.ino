@@ -72,7 +72,7 @@ void loop() {
       if (!SD.begin(4)) {
           Serial.println("init failed..");
       }
-      //write to SD
+      // Write to SD card
       file = SD.open("test.txt", FILE_WRITE);
       //Check if there are already a file to flush data and write inside 
       if (file) {
@@ -105,16 +105,18 @@ void loop() {
       EthernetClient client = server.available();
       //Client init
       if (client) {
-        Serial.println("new client");
+        Serial.println("Connection established with Raspberry Pi");
         
-        // an http request ends with a blank line
+        // HTTP request ends with a blank line
         boolean currentLineIsBlank = true;
+        // While the client requests data
         while (client.connected()) {
           if (client.available()) {
             char c = client.read();
             Serial.write(c);
+            // If the current line is blank and the next character is a new line character
             if (c == '\n' && currentLineIsBlank) {
-              // send a standard http response header
+              // Send a standard HTTP response header at the start of data
               client.println("HTTP/1.1 200 OK");
               client.println("Content-Type: text/html");
               client.println("Connection: close");  // the connection will be closed after completion of the response
@@ -123,16 +125,20 @@ void loop() {
               client.println("<!DOCTYPE HTML>");
               client.println("<html>");
 
-              //check if SD card is ok
+              // Check if SD card is ok
               if (!SD.begin(4)) {
                 Serial.println("init failed..");
               }
-              // open sd card
+              else {
+                Serial.println("SD card is OK");
+              }
+
+              // Try to open sd card
               file = SD.open("test.txt");
               if (!file) {
-                Serial.println("The text file cannot be opened or doesn't exist");
+                Serial.println("No data in SD Card.");
               }
-              // read data from sd card
+              // If SD card exist : read data inside
               if (file) {
                 Serial.println("Reading file..");
                 client.println(",");
@@ -145,15 +151,17 @@ void loop() {
                 SD.remove("test.txt");
               }
 
-              // read sensor data
+              // Read sensor data
               hih.read();
               float temp = hih.getAmbientTemp() / 100.0;
               float hum = hih.getRelHumidity() / 100.0;
+              // Print them on arduino serial
               Serial.print("Temperature : ");
               Serial.println(temp);
               Serial.print("Humidite : ");
               Serial.println(hum);
 
+              // Send data to client
               client.print(",");
               client.print("1"); // id capteur
               client.print(",");
@@ -177,14 +185,14 @@ void loop() {
               currentLineIsBlank = false;
             }
           }
-          
         }
         
-        // give the web browser time to receive the data
+        // Give the web browser time to receive the data
+        // And close the client connection
         delay(1);
         client.stop();
       }
   }
-
+  // Check if sampling interval is over
   delay(1000);
 }
