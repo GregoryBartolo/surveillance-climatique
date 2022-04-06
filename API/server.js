@@ -89,6 +89,13 @@ function requestArduino() {
 							return console.log(err);
 						}
 						console.log('Row updated : ${this.changes}');
+						// Print difference temperature and limits
+						console.log("Temperature mesurée : " + temperature + "°C");
+						console.log("Limite mini : " + limit_mini_temperature + "°C et limite maxi : " + limit_maxi_temperature + "°C");
+						// Print difference humidite and limits
+						console.log("Humidité mesurée : " + humidite + "%");
+						console.log("Limite mini : " + limit_mini_humidity + "% et limite maxi : " + limit_maxi_humidity + "%");
+						
 					});
 				}
 			});
