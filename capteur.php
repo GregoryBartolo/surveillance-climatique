@@ -49,7 +49,7 @@
 			<p class="col-2">ID Capteur : <?php echo $infos_station['id_capteur']; ?></p>
 			<p class="col-2">Nom station : <?php echo $infos_station['nom']; ?></p>
 			<p class="col-3">Date de mise en service : <?php echo $infos_station['date_on_service']; ?></p>
-			<p class="col-3">Date de dernière erreur : <?php echo $infos_station['date_last_error']; ?></p>
+			<p class="col-3">Dernier dépassement d'un seuil de température/humidité : <?php echo $infos_station['date_last_error']; ?></p>
 		</div>
 		<div class="row">
 			<p class="col-2">Position X : <?php echo $infos_station['position_x']; ?></p>
