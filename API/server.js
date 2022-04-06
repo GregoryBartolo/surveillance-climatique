@@ -3,7 +3,7 @@ var http = require('http');
 var request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const dateformat = require('dateformat');
-const TIME_REQUEST = 900;
+const TIME_REQUEST = 20;
 
 var httpServer = http.createServer(function (req, resp) {
 	resp.writeHead(200, {'Access-Control-Allow-Origin':'*','Content-Type': 'text/plain'});
@@ -108,7 +108,17 @@ function requestArduino() {
 		db.close();
 	})
 }
+
+function pingForTest() {
+	request('http://169.254.2.73', { json: true }, (err, res, body) => {
+		if (!err) {
+			console.log("Connection OK..")
+		}
+	})
+}
+
 setInterval(requestArduino, TIME_REQUEST * 1000); //time in ms..
+setInterval(pingForTest, 2000); //time in ms..
 
 httpServer.listen(8888)
 
