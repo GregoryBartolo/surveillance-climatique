@@ -5,6 +5,7 @@
 #include <HIH61xx.h>
 #include <AsyncDelay.h>
 
+// Init
 float t = millis();
 File file;
 String buffer;
@@ -17,14 +18,15 @@ AsyncDelay samplingInterval;
 void powerUpErrorHandler(HIH61xx<TwoWire>& hih)
 { Serial.println("Error powering up HIH61xx device"); }
 
-
 void readErrorHandler(HIH61xx<TwoWire>& hih)
 { Serial.println("Error reading from HIH61xx device"); }
 
+// Action at the start
 void setup() {    
     Serial.begin(115200);
     Wire.begin();
-
+  
+    // Init sensor
     //hih.setPowerUpErrorHandler(powerUpErrorHandler);
     //hih.setReadErrorHandler(readErrorHandler);
     hih.initialise();
@@ -39,6 +41,8 @@ void setup() {
     byte mac[] = {
       0xA8, 0x61, 0x0A, 0xAE, 0x66, 0x89
     };
+    
+    // Init connection 
     Ethernet.init(10);
     Ethernet.begin(mac, ip);
   
@@ -57,7 +61,7 @@ void setup() {
  
 }
 
-
+// Action during the Arduino lifecyle( client connection, data stored in sd card, data send to the client to generate the graph, ect.)
 void loop() {
   hih.start();
   
@@ -68,8 +72,9 @@ void loop() {
       if (!SD.begin(4)) {
           Serial.println("init failed..");
       }
+      //write to SD
       file = SD.open("test.txt", FILE_WRITE);
-
+      //Check if there are already a file to flush data and write inside 
       if (file) {
           file.print("FLUSH");
           while(Ethernet.linkStatus() == LinkOFF)
@@ -98,7 +103,7 @@ void loop() {
   } else { // If ethernet is connected -> send data to client incoming
      // listen for incoming clients
       EthernetClient client = server.available();
-
+      //Client init
       if (client) {
         Serial.println("new client");
         
@@ -127,7 +132,7 @@ void loop() {
               if (!file) {
                 Serial.println("The text file cannot be opened or doesn't exist");
               }
-              // read data of sd card
+              // read data from sd card
               if (file) {
                 Serial.println("Reading file..");
                 client.println(",");
