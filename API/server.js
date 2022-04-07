@@ -3,7 +3,7 @@ var http = require('http');
 var request = require('request');
 const sqlite3 = require('sqlite3').verbose();
 const dateformat = require('dateformat');
-const TIME_REQUEST = 20;
+const TIME_REQUEST = 900;
 
 var httpServer = http.createServer(function (req, resp) {
 	resp.writeHead(200, {'Access-Control-Allow-Origin':'*','Content-Type': 'text/plain'});
