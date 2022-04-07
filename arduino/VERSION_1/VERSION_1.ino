@@ -72,10 +72,9 @@ void loop() {
         //Serial.print("Link is OFF");
 
         // Check if SD card is ok
-        if (!SD.begin(4)) {
-            continue;
+        //if (!SD.begin(4)) {
             //Serial.println("init failed..");
-        }
+        //}
 
         // Open / Write to SD card
         //Serial.println("Creating file in SD card");
@@ -103,11 +102,11 @@ void loop() {
                 }
             }
             file.close();
-        } else {
-          continue;
+        }
+        //else {
             //Serial.print("Save on sd card failed !  : ");
             //Serial.println(file);
-        }
+        //}
     } else { // If ethernet is connected -> send data to client incoming
         // listen for incoming clients
         EthernetClient client = server.available();
@@ -140,20 +139,18 @@ void loop() {
                       client.println("<html>");
     
                       // Check if SD card is ok
-                      if (!SD.begin(4)) {
+                      //if (!SD.begin(4)) {
                           //Serial.println("init failed..");
-                          continue;
-                      }
+                      //}
 //                      else {
 //                          Serial.println("SD card is OK");
 //                      }
     
                       // Try to open sd card
                       file = SD.open("test.txt");
-                      if (!file) {
+                      //if (!file) {
                           //Serial.println("No data in SD Card.");
-                          continue;
-                      }
+                      //}
                       // If SD card exist : read data inside
                       if (file) {
                           //Serial.println("Reading file..");
