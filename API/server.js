@@ -42,24 +42,26 @@ function requestArduino() {
 					return console.error(err.message);
 				}
 				// Formattage
-				var dateTemp = result.date.split('/');
-				dateTemp = dateTemp[2].substring(0,4) + '-' + dateTemp[1] + '-' + dateTemp[0] + 'T' + result.date.split(' ')[1] 
-				var date = new Date(dateTemp);
+				if (result.date) {
+					var dateTemp = result.date.split('/');
+					dateTemp = dateTemp[2].substring(0,4) + '-' + dateTemp[1] + '-' + dateTemp[0] + 'T' + result.date.split(' ')[1] 
+					var date = new Date(dateTemp);
 				
-				old_data.forEach(function(item) {
-					item = item.split("-");
-					date.setSeconds(date.getSeconds() + TIME_REQUEST)
-					
-					var date_for_bdd = String(dateformat(date, 'dd/mm/yyyy HH:MM:ss'));
-					console.log(date_for_bdd);
-					
-					db.run('INSERT INTO mesures(id_capteur, date, temperature, humidity, battery, capteur_status) VALUES(?,?,?,?,?,?)', [id, date_for_bdd, item[0], item[1], batterie, status], function(err) {
-						if (err) {
-							return console.log(err);
-						}
-						console.log('A row has been inserted with rowid ${this.lastID} from sd card');
+					old_data.forEach(function(item) {
+						item = item.split("-");
+						date.setSeconds(date.getSeconds() + TIME_REQUEST)
+						
+						var date_for_bdd = String(dateformat(date, 'dd/mm/yyyy HH:MM:ss'));
+						console.log(date_for_bdd);
+						
+						db.run('INSERT INTO mesures(id_capteur, date, temperature, humidity, battery, capteur_status) VALUES(?,?,?,?,?,?)', [id, date_for_bdd, item[0], item[1], batterie, status], function(err) {
+							if (err) {
+								return console.log(err);
+							}
+							console.log('A row has been inserted with rowid ${this.lastID} from sd card');
+						});
 					});
-				});
+				}
 			});
 			
 		} else if (data.length == 7) {
