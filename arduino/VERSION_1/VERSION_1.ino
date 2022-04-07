@@ -23,7 +23,7 @@ void readErrorHandler(HIH61xx<TwoWire>& hih)
 
 // Action at the start
 void setup() {    
-    Serial.begin(115200);
+    //Serial.begin(115200);
     Wire.begin();
 
     // Init sensor
@@ -48,7 +48,7 @@ void setup() {
 
     // Check for Ethernet hardware present
     if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-        Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
+        //Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
         while (true) {
             delay(1); // do nothing, no point running without Ethernet hardware
         }
@@ -56,8 +56,8 @@ void setup() {
 
     // start the server
     server.begin();
-    Serial.print("Start at ");
-    Serial.println(Ethernet.localIP());
+    //Serial.print("Start at ");
+    //Serial.println(Ethernet.localIP());
 
 }
 
@@ -69,15 +69,16 @@ void loop() {
     // Check if ethernet is connected
     // If is not -> writing data in SD card
     if (Ethernet.linkStatus() == LinkOFF) {
-        Serial.print("Link is OFF");
+        //Serial.print("Link is OFF");
 
         // Check if SD card is ok
         if (!SD.begin(4)) {
-            Serial.println("init failed..");
+            continue;
+            //Serial.println("init failed..");
         }
 
         // Open / Write to SD card
-        Serial.println("Creating file in SD card");
+        //Serial.println("Creating file in SD card");
         file = SD.open("test.txt", FILE_WRITE);
         //Check if there are already a file to write inside 
         if (file) {
@@ -91,9 +92,9 @@ void loop() {
                     float temp = hih.getAmbientTemp() / 100.0;
                     float hum = hih.getRelHumidity() / 100.0;
                     
-                    Serial.println("File open and writing inside");
-                    Serial.println(temp);
-                    Serial.println(hum);
+                    //Serial.println("File open and writing inside");
+                    //Serial.println(temp);
+                    //Serial.println(hum);
                     file.print(temp); //print the data to file
                     file.print("-"); //print the data to file
                     file.println(hum); //print the data to file
@@ -103,15 +104,16 @@ void loop() {
             }
             file.close();
         } else {
-            Serial.print("Save on sd card failed !  : ");
-            Serial.println(file);
+          continue;
+            //Serial.print("Save on sd card failed !  : ");
+            //Serial.println(file);
         }
     } else { // If ethernet is connected -> send data to client incoming
         // listen for incoming clients
         EthernetClient client = server.available();
         //Client init
         if (client) {
-            Serial.println("Connection established with Raspberry Pi");
+            //Serial.println("Connection established with Raspberry Pi");
             String connection_method;
             
             // HTTP request ends with a blank line
@@ -139,20 +141,22 @@ void loop() {
     
                       // Check if SD card is ok
                       if (!SD.begin(4)) {
-                          Serial.println("init failed..");
+                          //Serial.println("init failed..");
+                          continue;
                       }
-                      else {
-                          Serial.println("SD card is OK");
-                      }
+//                      else {
+//                          Serial.println("SD card is OK");
+//                      }
     
                       // Try to open sd card
                       file = SD.open("test.txt");
                       if (!file) {
-                          Serial.println("No data in SD Card.");
+                          //Serial.println("No data in SD Card.");
+                          continue;
                       }
                       // If SD card exist : read data inside
                       if (file) {
-                          Serial.println("Reading file..");
+                          //Serial.println("Reading file..");
                           client.println(",");
                           while (file.available()) {
                             buffer = file.readStringUntil('\n');
@@ -168,10 +172,10 @@ void loop() {
                       float temp = hih.getAmbientTemp() / 100.0;
                       float hum = hih.getRelHumidity() / 100.0;
                       // Print them on arduino serial
-                      Serial.print("Temperature : ");
-                      Serial.println(temp);
-                      Serial.print("Humidite : ");
-                      Serial.println(hum);
+//                      Serial.print("Temperature : ");
+//                      Serial.println(temp);
+//                      Serial.print("Humidite : ");
+//                      Serial.println(hum);
     
                       // Send data to client
                       client.print(",");
@@ -190,7 +194,7 @@ void loop() {
                         break;
                     }
                     else {
-                      Serial.println("Ping received");
+                      //Serial.println("Ping received");
                       client.println("HTTP/1.1 200 OK");
                       client.println("Content-Type: text/html");
                       client.println("Connection: close");  // the connection will be closed after completion of the response
