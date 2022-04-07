@@ -155,8 +155,8 @@ void loop() {
                           Serial.println("Reading file..");
                           client.println(",");
                           while (file.available()) {
-                          buffer = file.readStringUntil('\n');
-                          client.println(buffer);
+                            buffer = file.readStringUntil('\n');
+                            client.println(buffer);
                           }
                           file.close();
       
