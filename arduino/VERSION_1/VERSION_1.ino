@@ -84,7 +84,7 @@ void loop() {
             file.print("FLUSH");
             while(Ethernet.linkStatus() == LinkOFF)
             {
-                if ((millis()-t)>20000) // time in ms to wait before writing inside the file
+                if ((millis()-t)>900000) // time in ms to wait before writing inside the file
                 {
                     // Read sensor data
                     hih.read();
